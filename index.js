@@ -17,7 +17,7 @@ const imageToGcode = require('./util/imageToGcode');
 const app = express();
 const port = process.env.APP_PORT || 3000;
 
-app.get('/', (req, res) => res.send('Hello World!'));
+app.get('/', (req, res) => res.send('Hello World!!!'));
 
 app.get('/shop', async (req, res) => {
   const shops = await models.Shop.findAll();
