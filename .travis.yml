@@ -5,6 +5,7 @@ env:
   APP_PATH: /root/coffee-print/coffee-print-docker
   DELPOY_PATH: /root/coffee-print/coffee-print-server
   DOCKER_APP_PATH: app
+  SERVICE_NAME: coffee-print
 
 sudo: false
 
@@ -32,8 +33,12 @@ deploy:
   provider: script
   skip_cleanup: true
   script: bash -c '
-    ssh root@$SSH_HOST "systemctl stop coffee-print && rm -rf $DELPOY_PATH"
+    ssh root@$SSH_HOST "systemctl stop $SERVICE_NAME && rm -rf $DELPOY_PATH"
     && rsync --recursive ./* $SSH_USER@$SSH_HOST:$DELPOY_PATH/
-    && ssh root@$SSH_HOST "cd $APP_PATH && docker-compose run app bash -c \"cd $DOCKER_APP_PATH && npm install && npx sequelize db:migrate \" && systemctl start coffee-print"'
+    && ssh root@$SSH_HOST "
+      cd $APP_PATH
+      && docker-compose run app bash -c \"
+        cd $DOCKER_APP_PATH && npm install && npx sequelize db:migrate \"
+      && systemctl start $SERVICE_NAME"'
   on:
     branch: master
