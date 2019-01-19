@@ -15,7 +15,11 @@ module.exports = {
     radix: ['error', 'as-needed'],
 
     // disallow the use of console (no-console)
-    'no-console': ['error', { allow: ['info', 'warn', 'error'] } ]
+    'no-console': ['error', { allow: ['info', 'warn', 'error'] } ],
+
+    // disallow the unary operators ++ and -- (no-plusplus)
+    'no-plusplus': 'off',
+
   },
   parserOptions: {
     parser: 'babel-eslint'

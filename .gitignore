@@ -1,7 +1,7 @@
 # NPM
 node_modules
 .vscode
+
+.travis/id_rsa
 uploads
-
-
 .env

@@ -37,7 +37,7 @@ const convert = async (path, picSize) => {
     .write(`${path}_${picSize}.png`); // save
 
   let fileTxtContent = '';
-  let fileGcodeContent = 'G28 X0\nG28 Y0\nG28 Z0\n';
+  let fileGcodeContent = 'G28 X0\nG28 Y0\nG28 Z0\nM106\nG1X80F10000\nG1Y40F10000\nG92 X0 Y0\n';
   const offset = 0.24;
 
   let currentOffsetX = -1;
@@ -90,7 +90,7 @@ const convert = async (path, picSize) => {
     fileTxtContent += `${arrayTxtContent.join('\n')}\n`;
   }
 
-  fileGcodeContent += 'M84\n';
+  fileGcodeContent += 'M107\nG1Z200F1000\nG28 X0\nG28 Y0\nM84\n';
 
   fs.writeFileSync(`${path}_${picSize}.txt`, fileTxtContent);
   fs.writeFileSync(`${path}_${picSize}.gcode`, fileGcodeContent);
