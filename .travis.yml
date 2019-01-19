@@ -31,8 +31,8 @@ deploy:
   provider: script
   skip_cleanup: true
   script: bash -c '
-    ssh root@$SSH_HOST "systemctl stop coffee-script && rm -rf $DELPOY_PATH"
+    ssh root@$SSH_HOST "systemctl stop coffee-print && rm -rf $DELPOY_PATH"
     && rsync --recursive ./* $SSH_USER@$SSH_HOST:$DELPOY_PATH/
-    && ssh root@$SSH_HOST "cd $APP_PATH && docker-compose run app bash -c \"npm install && npx sequelize db:migrate \" && systemctl start coffee-script"'
+    && ssh root@$SSH_HOST "cd $APP_PATH && docker-compose run app bash -c \"npm install && npx sequelize db:migrate \" && systemctl start coffee-print"'
   on:
     branch: master
