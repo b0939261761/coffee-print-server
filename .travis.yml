@@ -22,7 +22,7 @@ before_install:
   - ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
   - ssh-add ./.travis/id_rsa
 
-install: true
+install: false
 
 script:
   - echo "npm test temporarily disabled"
