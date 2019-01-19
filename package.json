@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cross-env NODE_ENV=production node index.js",
-    "serve": "cross-env NODE_ENV=development nodemon"
+    "start": "npx cross-env NODE_ENV=production node index.js",
+    "serve": "npx cross-env NODE_ENV=development nodemon"
   },
   "keywords": [],
   "author": "",
