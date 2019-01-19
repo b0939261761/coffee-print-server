@@ -4,6 +4,7 @@ env:
   SSH_USER: root
   APP_PATH: /root/coffee-print/coffee-print-docker
   DELPOY_PATH: /root/coffee-print/coffee-print-server
+  DOCKER_APP_PATH: app
 
 sudo: false
 
@@ -22,7 +23,7 @@ before_install:
   - ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
   - ssh-add ./.travis/id_rsa
 
-install: false
+install: true
 
 script:
   - echo "npm test temporarily disabled"
@@ -33,6 +34,6 @@ deploy:
   script: bash -c '
     ssh root@$SSH_HOST "systemctl stop coffee-print && rm -rf $DELPOY_PATH"
     && rsync --recursive ./* $SSH_USER@$SSH_HOST:$DELPOY_PATH/
-    && ssh root@$SSH_HOST "cd $APP_PATH && docker-compose run app bash -c \"npm install && npx sequelize db:migrate \" && systemctl start coffee-print"'
+    && ssh root@$SSH_HOST "cd $APP_PATH && docker-compose run app bash -c \"cd $DOCKER_APP_PATH && npm install && npx sequelize db:migrate \" && systemctl start coffee-print"'
   on:
     branch: master
