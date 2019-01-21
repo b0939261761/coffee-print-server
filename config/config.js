@@ -5,14 +5,15 @@ const defaultValue = {
   database: process.env.POSTGRES_DB,
   host: process.env.POSTGRES_HOST,
   port: process.env.POSTGRES_PORT,
-  dialect: 'postgres'
+  dialect: 'postgres',
+  operatorsAliases: false
 };
 
 
 module.exports = {
   development: {
     ...defaultValue,
-    logging: true
+    logging: console.info
   },
   test: {
     ...defaultValue
