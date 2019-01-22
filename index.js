@@ -25,7 +25,7 @@ const port = process.env.APP_PORT || 3000;
 
 app.use(cors());
 
-app.get('/', (req, res) => res.send('Hello World!!!'));
+app.get('/', (_, res) => res.send('Hello World!!!'));
 
 app.get('/shops', async (req, res) => {
   const shops = await models.Shop.findAll();
