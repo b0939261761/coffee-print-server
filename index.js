@@ -18,7 +18,7 @@ const models = require('./models');
 
 const { Op } = Sequelize;
 
-const imageToGcode = require('./util/imageToGcode');
+const imageToGcode = require('./utils/imageToGcode');
 
 const app = express();
 const port = process.env.APP_PORT || 3000;
@@ -52,19 +52,18 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     return;
   }
 
-  const { pathFile } = req.file.path;
+  const pathFile = req.file.path;
 
   await imageToGcode(pathFile);
 
-  const picture = await shop.createPicture({
+  await shop.createPicture({
     originalFilename: req.file.originalname,
     description: req.body.description,
     path: pathFile
   });
 
-  res.json({ status: true, picture: picture.id });
+  res.json({ status: true, fileName: req.file.filename });
 });
-
 
 app.get('/file/:name', (req, res) => {
   const fileName = path.join(__dirname, pathUploads, req.params.name);
