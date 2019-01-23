@@ -1,40 +1,13 @@
 const Jimp = require('jimp');
-const configure = require('@jimp/custom');
-const circle = require('@jimp/plugin-circle');
-
-const jimp = configure({ plugins: [circle] }, Jimp);
 
 const fs = require('fs');
 
 const convert = async (path, picSize) => {
-  const image = await jimp.read(path);
-
-  const [resizeWidth, resizeHeight] = image.bitmap.height > image.bitmap.width
-    ? [Jimp.AUTO, picSize]
-    : [picSize, Jimp.AUTO];
+  const image = await Jimp.read(path);
 
   image
-    .resize(resizeWidth, resizeHeight)
-    .grayscale()
-    .contain(picSize, picSize)
-    .scanQuiet(0, 0, image.bitmap.width, image.bitmap.height, (x, y, idx) => {
-      const red = image.bitmap.data[idx];
-      const green = image.bitmap.data[idx + 1];
-      const blue = image.bitmap.data[idx + 2];
-      const alpha = image.bitmap.data[idx + 3];
-
-      const isWhite = ((red + green + blue) / 3) > 122.5 || alpha < 122.5;
-
-      const color = isWhite ? 255 : 0;
-
-      image.bitmap.data[idx] = color;
-      image.bitmap.data[idx + 1] = color;
-      image.bitmap.data[idx + 2] = color;
-
-      if (alpha !== 255) image.bitmap.data[idx + 3] = 255;
-    })
-    .circle({ radius: picSize / 2, x: image.bitmap.width / 2, y: image.bitmap.height / 2 })
-    .write(`${path}_${picSize}.png`); // save
+    .resize(picSize, picSize)
+    .write(`${path}_${picSize}.jpeg`);
 
   let fileTxtContent = '';
   let fileGcodeContent = 'G28 X0\nG28 Y0\nG28 Z0\nM106\nG1X80F10000\nG1Y40F10000\nG92 X0 Y0\n';
@@ -98,6 +71,7 @@ const convert = async (path, picSize) => {
 
 module.exports = async path => {
   await convert(path, 220);
-  // await convert(path, 250);
-  // await convert(path, 300);
+  await convert(path, 250);
+  await convert(path, 300);
+  await convert(path, 500);
 };
