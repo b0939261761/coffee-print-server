@@ -8,16 +8,6 @@ module.exports = {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    originalFilename: {
-      allowNull: false,
-      type: Sequelize.STRING(254),
-      defaultValue: ''
-    },
-    description: {
-      allowNull: false,
-      type: Sequelize.STRING(254),
-      defaultValue: ''
-    },
     path: {
       allowNull: false,
       type: Sequelize.STRING(254),

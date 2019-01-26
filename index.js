@@ -55,11 +55,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
   await imageToGcode(pathFile);
 
-  await shop.createPicture({
-    originalFilename: req.file.originalname,
-    description: req.body.description,
-    path: pathFile
-  });
+  await shop.createPicture({ path: pathFile });
 
   res.json({ status: true, fileName: req.file.filename });
 });
