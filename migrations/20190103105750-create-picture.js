@@ -8,11 +8,6 @@ module.exports = {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    path: {
-      allowNull: false,
-      type: Sequelize.STRING(254),
-      defaultValue: ''
-    },
     shopId: {
       allowNull: false,
       type: Sequelize.INTEGER,

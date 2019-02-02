@@ -3,7 +3,7 @@ module.exports = {
   env: {
     node: true
   },
-  extends: 'airbnb-base',
+  extends: ['airbnb-base', 'plugin:node/recommended'],
   rules: {
     // require or disallow trailing commas (comma-dangle)
     'comma-dangle': ['error', 'never'],
@@ -19,6 +19,8 @@ module.exports = {
 
     // disallow the unary operators ++ and -- (no-plusplus)
     'no-plusplus': 'off',
+
+    "no-unused-vars": ['error', { argsIgnorePattern: '^(req|res|next)$' }]
 
   },
   parserOptions: {

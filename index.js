@@ -1,73 +1,40 @@
-const path = require('path');
-
 const express = require('express');
 const cors = require('cors');
-
 const dotenv = require('dotenv');
 
 if (process.env.NODE_ENV !== 'production') dotenv.config();
 
-const multer = require('multer');
-
-const pathUploads = 'uploads';
-const upload = multer({ dest: `${pathUploads}/` });
-
-const Sequelize = require('sequelize');
-const models = require('./models');
-
-const { Op } = Sequelize;
-
-const imageToGcode = require('./utils/imageToGcode');
-
 const app = express();
 const port = process.env.APP_PORT || 3000;
 
+const routes = require('./routes');
+
 app.use(cors());
 
-app.get('/', (_, res) => res.send('Hello World!!!'));
+app.use('/', routes);
 
-app.get('/shops', async (req, res) => {
-  const shops = await models.Shop.findAll();
-  res.send(shops);
-});
-
-app.get('/shops/:id', async (req, res) => {
-  const shop = await models.Shop.findOne({
-    where: { code: { [Op.eq]: req.params.id } },
-    attributes: ['id', 'code', 'name']
-  });
-
-  res.json(shop);
-});
-
-app.post('/upload', upload.single('file'), async (req, res) => {
-  const shop = await models.Shop.findOne({
-    where: { code: { [Op.eq]: req.body.shopCode } },
-    attributes: ['id']
-  });
-
-  if (!shop) {
-    res.status(500).json({ code: 'NOT_EXISTS_CODE' });
-    return;
-  }
-
-  const pathFile = req.file.path;
-
-  await imageToGcode(pathFile);
-
-  await shop.createPicture({ path: pathFile });
-
-  res.json({ status: true, fileName: req.file.filename });
-});
-
-app.get('/file/:name', (req, res) => {
-  const fileName = path.join(__dirname, pathUploads, req.params.name);
-  // if (!fs.existsSync(fileName)) {
-  //   res.sendStatus(404);
-  //   return;
+app.use((err, req, res, next) => {
+  // if (err.code === 'LIMIT_FILE_TYPES') {
+  //   res.status(422).json({ code: err.code, message: err.message });
   // }
 
-  res.sendFile(fileName);
+  const errorCode = err.code || err.message;
+  const errorMessage = errorCode !== err.message ? err.message : undefined;
+
+  let statusCode;
+  switch (errorCode) {
+    case 'MISSING_PARAMS':
+      statusCode = 400;
+      break;
+    case 'WRONG_PARAMS':
+      statusCode = 422;
+      break;
+    default:
+      statusCode = 404;
+  }
+
+  //
+  res.status(statusCode).json({ code: errorCode, message: errorMessage });
 });
 
 app.listen(port, () => console.info(`💡 App listening on port ${port}!`));

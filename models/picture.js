@@ -1,7 +1,5 @@
-module.exports = (sequelize, DataTypes) => {
-  const Picture = sequelize.define('Picture', {
-    path: DataTypes.STRING
-  }, {});
+module.exports = sequelize => {
+  const Picture = sequelize.define('Picture', {}, {});
   Picture.associate = models => {
     Picture.belongsTo(models.Shop, { foreignKey: 'shopId' });
   };
