@@ -44,3 +44,5 @@ deploy:
       && systemctl start $SERVICE_NAME"'
   on:
     branch: master
+
+    #   && cd $DELPOY_PATH && find ! -path "./$PATH_UPLOADS*" -a -delete"
