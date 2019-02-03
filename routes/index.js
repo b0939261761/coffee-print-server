@@ -42,16 +42,17 @@ routes.get('/shops/:id/pictures', async (req, res, next) => {
 
   const pictures = await shop.getPictures({
     where: { id: { [Op.gt]: pictureId } },
-    attributes: ['id', 'path']
+    attributes: ['id']
   });
 
-  res.json({ pictures });
+  const pictureList = pictures.map(({ id }) => id);
+  res.json({ pictures: pictureList });
 });
 
 // --------------------------------------------------------
 
 const fileFilter = async (req, file, next) => {
-  const allowedTypes = ['image/jpeg'];
+  const allowedTypes = ['image/jpeg', 'image/jpg'];
   if (!allowedTypes.includes(file.mimetype)) {
     return next(new Error('LIMIT_FILE_TYPES'));
   }
