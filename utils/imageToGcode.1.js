@@ -10,14 +10,13 @@ const convert = async (path, picSize) => {
     .write(`${path}_${picSize}.jpeg`);
 
   let fileTxtContent = '';
-
   let fileGcodeContent = 'G28 X0\nG28 Y0\nG28 Z0\nM106\nG1X80F10000\nG1Y40F10000\nG92 X0 Y0\n';
   const offset = 0.24;
 
   let currentOffsetX = -1;
   let currentOffsetY = -1;
 
-  for (let y = 0, offsetY = 0; y < image.bitmap.height; y += 12, offsetY += offset * 12) {
+  for (let y = 0, offsetY = 0; y < image.bitmap.height; y += 11, offsetY += offset * 12) {
     const arrayTxtContent = Array(image.bitmap.height - y > 13 ? 12 : image.bitmap.height - y).fill('');
 
     for (let x = 0, offsetX = 0; x < image.bitmap.width; ++x, offsetX += offset) {
@@ -72,7 +71,7 @@ const convert = async (path, picSize) => {
 
 module.exports = async path => {
   await convert(path, 220);
-  // await convert(path, 250);
-  // await convert(path, 300);
-  // await convert(path, 500);
+  await convert(path, 250);
+  await convert(path, 300);
+  await convert(path, 500);
 };
