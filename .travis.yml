@@ -5,8 +5,8 @@ env:
   APP_PATH: /root/coffee-print/coffee-print-docker
   DEPLOY_PATH: /root/coffee-print/coffee-print-server
   DOCKER_APP_PATH: app
-  SERVICE_NAME: coffee-print
   PATH_UPLOADS: uploads
+  SERVICE_NAME: coffee-print
 
 sudo: false
 
