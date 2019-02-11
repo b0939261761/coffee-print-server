@@ -1,7 +1,7 @@
 
 
 module.exports = {
-  up: queryInterface => queryInterface.bulkInsert('Shops', [
+  up: queryInterface => queryInterface.bulkInsert('Devices', [
     {
       code: '1',
       name: 'Coffee Shop Lvov'
@@ -20,5 +20,5 @@ module.exports = {
     }
   ], {}),
 
-  down: queryInterface => queryInterface.bulkDelete('Shops', null, {})
+  down: queryInterface => queryInterface.bulkDelete('Devices', null, {})
 };

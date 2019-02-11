@@ -1,4 +1,4 @@
-const tableName = 'Shops';
+const tableName = 'Devices';
 
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable(tableName, {

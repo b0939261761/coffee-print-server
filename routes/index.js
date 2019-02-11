@@ -3,7 +3,6 @@ const path = require('path');
 const multer = require('multer');
 const routes = require('express').Router();
 const models = require('../models');
-const imageToGcode = require('../utils/imageToGcode');
 
 const { Op } = models.Sequelize;
 
@@ -12,41 +11,33 @@ if (!fs.existsSync(pathUploads)) fs.mkdirSync(pathUploads);
 
 // --------------------------------------------------------
 
-routes.get('/', (req, res) => res.send('Coffee Shop'));
+routes.get('/', (req, res) => res.send('Coffee Print'));
 
 // --------------------------------------------------------
 
-routes.get('/shops/:code', async (req, res) => {
-  const shop = await models.Shop.findOne({
+routes.get('/devices/:code', async (req, res) => {
+  const device = await models.Device.findOne({
     where: { code: { [Op.eq]: req.params.code } },
     attributes: ['id', 'code', 'name']
   });
 
-  res.json(shop);
+  res.json(device);
 });
 
 // --------------------------------------------------------
 
-routes.get('/shops/:id/pictures', async (req, res, next) => {
-  const shopId = req.params.id;
-  const pictureId = req.query.id || 0;
+routes.get('/devices/:id/pictures', async (req, res, next) => {
+  const deviceId = req.params.id;
 
-  if (!shopId) next(new Error('MISSING_PARAMS'));
+  if (!deviceId) next(new Error('MISSING_PARAMS'));
 
-  const shop = await models.Shop.findOne({
-    where: { id: { [Op.eq]: shopId } },
-    attributes: ['id', 'code', 'name']
-  });
-
-  if (!shop) next(new Error('WRONG_PARAMS'));
-
-  const pictures = await shop.getPictures({
-    where: { id: { [Op.gt]: pictureId } },
+  const pictures = await models.Picture.findAll({
+    where: { deviceId: { [Op.eq]: deviceId } },
     attributes: ['id']
   });
 
   const pictureList = pictures.map(({ id }) => id);
-  res.json({ pictures: pictureList });
+  res.json({ items: pictureList });
 });
 
 // --------------------------------------------------------
@@ -57,20 +48,20 @@ const fileFilter = async (req, file, next) => {
     return next(new Error('LIMIT_FILE_TYPES'));
   }
 
-  const shopId = req.params.id;
-  if (!shopId) next(new Error('MISSING_PARAMS'));
+  const deviceId = req.params.id;
+  if (!deviceId) next(new Error('MISSING_PARAMS'));
 
-  const shop = await models.Shop.findOne({
-    where: { id: { [Op.eq]: shopId } },
+  const device = await models.Device.findOne({
+    where: { id: { [Op.eq]: deviceId } },
     attributes: ['id', 'code', 'name']
   });
 
-  if (!shop) next(new Error('WRONG_PARAMS'));
+  if (!device) next(new Error('WRONG_PARAMS'));
 
   const filePath = `${pathUploads}/${req.params.id}`;
   if (!fs.existsSync(filePath)) fs.mkdirSync(filePath);
 
-  const picture = await shop.createPicture();
+  const picture = await device.createPicture();
 
   req.filePath = filePath;
   req.fileName = picture.id.toString();
@@ -93,19 +84,18 @@ const upload = multer({
   storage
 });
 
-routes.post('/shops/:id/pictures', upload.single('file'), async (req, res) => {
-  await imageToGcode(`${req.filePath}/${req.fileName}`);
+routes.post('/devices/:id/pictures', upload.single('file'), (req, res) => {
   res.status(204).send();
 });
 
 // --------------------------------------------------------
 
-routes.get('/shops/:shopId/pictures/:fileName', (req, res, next) => {
-  const { shopId, fileName } = req.params;
+routes.get('/devices/:deviceId/pictures/:pictureId', (req, res, next) => {
+  const { deviceId, pictureId } = req.params;
 
-  if (!shopId || !fileName) next(new Error('MISSING_PARAMS'));
+  if (!deviceId || !pictureId) next(new Error('MISSING_PARAMS'));
 
-  const fullPath = path.join(__dirname, '..', pathUploads, shopId, fileName);
+  const fullPath = path.join(__dirname, '..', pathUploads, deviceId, pictureId);
 
   if (!fs.existsSync(fullPath)) next(new Error('NOT_EXISTS_FILE'));
 
@@ -114,25 +104,21 @@ routes.get('/shops/:shopId/pictures/:fileName', (req, res, next) => {
 
 // --------------------------------------------------------
 
-routes.delete('/pictures/:id', async (req, res, next) => {
-  const pictureId = req.params.id;
+routes.delete('/devices/:deviceId/pictures/:pictureId', async (req, res, next) => {
+  const { pictureId } = req.params;
   if (!pictureId) next(new Error('MISSING_PARAMS'));
 
   const picture = await models.Picture.findOne({
     where: { id: { [Op.eq]: pictureId } },
-    attributes: ['id', 'shopId']
+    attributes: ['id', 'deviceId']
   });
 
   if (!picture) next(new Error('WRONG_PARAMS'));
 
-  const filePath = path.join(__dirname, '..', pathUploads, picture.shopId.toString());
+  const fullPath = path.join(__dirname, '..', pathUploads, picture.deviceId.toString(), pictureId);
   try {
-    const files = fs.readdirSync(filePath);
-    files.forEach(name => {
-      const pattern = new RegExp(`^${pictureId}(_|$)`);
-      if (pattern.test(name)) fs.unlinkSync(path.join(filePath, name));
-    });
-
+    if (!fs.existsSync(fullPath)) next(new Error('NOT_EXISTS_FILE'));
+    fs.unlinkSync(fullPath);
     await picture.destroy();
   } catch (err) {
     const error = new Error(err.message);
