@@ -1,24 +1,14 @@
+const tableName = 'Devices';
 
+const devices = Array.from(
+  { length: 1000 },
+  (v, i) => ({
+    code: `1${(i + 1).toString().padStart(4, '0')}`,
+    name: `Устройство: ${i + 1}`
+  })
+);
 
 module.exports = {
-  up: queryInterface => queryInterface.bulkInsert('Devices', [
-    {
-      code: '1',
-      name: 'Coffee Shop Lvov'
-    },
-    {
-      code: '2',
-      name: 'Coffee SHop Kiev'
-    },
-    {
-      code: '3',
-      name: 'Coffee Shop Rivne'
-    },
-    {
-      code: '4',
-      name: 'Coffee SHop Lutsk'
-    }
-  ], {}),
-
-  down: queryInterface => queryInterface.bulkDelete('Devices', null, {})
+  up: queryInterface => queryInterface.bulkInsert(tableName, devices, {}),
+  down: queryInterface => queryInterface.bulkDelete(tableName, null, {})
 };
