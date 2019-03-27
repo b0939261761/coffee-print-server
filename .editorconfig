@@ -18,4 +18,3 @@ insert_final_newline = true
 
 # Строки оканчивать на 0x0A (10 decimal)
 end_of_line = lf
-                                           

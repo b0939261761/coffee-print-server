@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npx cross-env NODE_ENV=production node index.js",
-    "serve": "npx cross-env NODE_ENV=development nodemon",
+    "serve": "npx cross-env NODE_ENV=development nodemon --inspect",
     "db:migrate": "npx sequelize db:migrate",
     "db:rollback": "npx sequelize db:migrate:undo"
   },
@@ -17,21 +17,22 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "adbkit-apkreader": "^3.1.2",
     "cors": "^2.8.5",
-    "dotenv": "^6.2.0",
+    "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "multer": "^1.4.1",
-    "pg": "^7.7.1",
+    "pg": "^7.9.0",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.42.0"
+    "sequelize": "^5.1.0"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
-    "eslint": "^5.3.0",
+    "eslint": "^5.15.3",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-node": "^8.0.1",
-    "nodemon": "^1.18.9",
+    "nodemon": "^1.18.10",
     "sequelize-cli": "^5.4.0"
   }
 }
