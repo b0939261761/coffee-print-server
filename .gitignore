@@ -1,6 +1,7 @@
 # NPM
 node_modules
 
+galleries
 .travis/id_rsa
 uploads
 .env
