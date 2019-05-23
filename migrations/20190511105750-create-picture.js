@@ -1,4 +1,6 @@
-const tableName = 'GalleryCategories';
+'use strict';
+
+const tableName = 'GalleryPictures';
 
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable(tableName, {
@@ -7,6 +9,15 @@ module.exports = {
       autoIncrement: true,
       primaryKey: true,
       type: Sequelize.INTEGER
+    },
+    galleryCategoryId: {
+      allowNull: false,
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'GalleryCategories',
+        key: 'id'
+      },
+      onDelete: 'CASCADE'
     },
     num: {
       allowNull: false,
@@ -17,11 +28,6 @@ module.exports = {
       allowNull: false,
       type: Sequelize.BOOLEAN,
       defaultValue: true
-    },
-    name: {
-      allowNull: false,
-      type: Sequelize.STRING(50),
-      defaultValue: ''
     },
     createdAt: {
       allowNull: false,

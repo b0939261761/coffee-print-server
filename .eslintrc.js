@@ -20,7 +20,7 @@ module.exports = {
     // disallow the unary operators ++ and -- (no-plusplus)
     'no-plusplus': 'off',
 
-    "no-unused-vars": ['error', { argsIgnorePattern: '^(req|res|next)$' }]
+    "no-unused-vars": ['error', { argsIgnorePattern: '^(req|res|next)$' }],
 
   },
   parserOptions: {
