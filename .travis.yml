@@ -34,7 +34,7 @@ deploy:
   provider: script
   skip_cleanup: true
   script: bash -c '
-    ssh root@$SSH_HOST "find $DEPLOY_PATH -not -path '$DEPLOY_PATH'
-        -not -path '$DEPLOY_PATH/$PATH_UPLOADS*'"'
+    ssh root@$SSH_HOST "find $DEPLOY_PATH -not -path \'$DEPLOY_PATH\'
+        -not -path \'$DEPLOY_PATH/$PATH_UPLOADS*\'"'
   on:
     branch: master
