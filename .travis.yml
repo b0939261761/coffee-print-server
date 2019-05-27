@@ -35,7 +35,7 @@ deploy:
   skip_cleanup: true
   script: bash -c '
     ssh root@$SSH_HOST "find /root/coffee-print/coffee-print-server
-        -not -path '/root/coffee-print/coffee-print-server'
-        -not -path '/root/coffee-print/coffee-print-server/uploads*' -delete"'
+        -not -path \"/root/coffee-print/coffee-print-server\"
+        -not -path \"/root/coffee-print/coffee-print-server/uploads*\" -delete"'
   on:
     branch: master
