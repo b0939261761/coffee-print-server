@@ -7,7 +7,9 @@ const fsPromises = require('fs').promises;
 const routes = require('express').Router();
 const models = require('../models');
 
-const pathGalleries = path.join(__dirname, '..', process.env.APP_PATH_GALLERIES);
+const pathGalleries = path.join(__dirname, '..',
+  process.env.APP_PATH_UPLOADS, process.env.APP_PATH_GALLERIES);
+
 if (!fs.existsSync(pathGalleries)) fs.mkdirSync(pathGalleries);
 
 const pathGalleryCategories = path.join(pathGalleries, process.env.APP_PATH_GALLERY_CATEGORIES);
@@ -42,7 +44,7 @@ routes.get('/categories/:pictureId', (req, res, next) => {
 
   if (!fs.existsSync(fullPath)) return res.sendStatus(404);
 
-  res.sendFile(fullPath);
+  return res.sendFile(fullPath);
 });
 
 // -- CREATE CATEGORY ------------------------------------------------------
@@ -176,7 +178,7 @@ routes.get('/pictures/:pictureId', (req, res, next) => {
 
   if (!fs.existsSync(fullPath)) return res.sendStatus(404);
 
-  res.sendFile(fullPath);
+  return res.sendFile(fullPath);
 });
 
 // -- CREATE PICTURE ----------------------------------------------------
