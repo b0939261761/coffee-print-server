@@ -36,12 +36,6 @@ deploy:
   script: bash -c '
     ssh root@$SSH_HOST "systemctl stop $SERVICE_NAME
       && find $DEPLOY_PATH -not -path '$DEPLOY_PATH'
-        -not -path '$DEPLOY_PATH/$PATH_UPLOADS*' -delete"
-    && rsync --recursive ./* $SSH_USER@$SSH_HOST:$DEPLOY_PATH/
-    && ssh root@$SSH_HOST "
-      cd $APP_PATH
-      && docker-compose run app bash -c \"
-        cd $DOCKER_APP_PATH && npm install && npx sequelize db:migrate \"
-      && systemctl start $SERVICE_NAME"'
+        -not -path '$DEPLOY_PATH/$PATH_UPLOADS*' -delete"'
   on:
     branch: master
