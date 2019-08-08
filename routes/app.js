@@ -42,7 +42,8 @@ routes.post('/upload', upload.single('file'), async (req, res, next) => {
     await fsPromises.rename(fullPathAppTmp, fullPathApp);
     const reader = await ApkReader.open(fullPathApp);
     const manifest = await reader.readManifest();
-    await models.App.update({ version: manifest.versionCode }, { where: { id: 1 } });
+    const version = manifest.versionCode.toString().padStart(6, '0');
+    await models.App.update({ version }, { where: { id: 1 } });
   } catch (err) {
     return next(new Error(err));
   }

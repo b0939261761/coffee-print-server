@@ -1,3 +1,5 @@
+'use strict';
+
 const tableName = 'App';
 
 module.exports = {
@@ -10,7 +12,7 @@ module.exports = {
     },
     version: {
       allowNull: false,
-      type: Sequelize.STRING(20),
+      type: Sequelize.STRING(6),
       defaultValue: ''
     },
     createdAt: {
