@@ -52,8 +52,8 @@ routes.post('/upload', upload.single('file'), async (req, res, next) => {
 
 routes.get('/check/:version', async (req, res, next) => {
   const app = await models.App.findOne({ where: { id: 1 }, attributes: ['version'] });
-  // Убрать костыль после того как будет обновление '030010' (req.params.version <= 3)
-  const status = req.params.version <= 3 || req.params.version < app.version;
+  // Убрать костыль после того как будет обновление '030010' (req.params.version.includes('.'))
+  const status = req.params.version.includes('.') || req.params.version < app.version;
   res.send({ status });
 });
 
