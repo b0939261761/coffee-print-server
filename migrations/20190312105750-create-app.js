@@ -12,8 +12,8 @@ module.exports = {
     },
     version: {
       allowNull: false,
-      type: Sequelize.STRING(6),
-      defaultValue: ''
+      type: Sequelize.INTEGER,
+      defaultValue: 0
     },
     createdAt: {
       allowNull: false,

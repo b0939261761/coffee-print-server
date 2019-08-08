@@ -1,5 +1,7 @@
+'use strict';
+
 module.exports = (sequelize, DataTypes) => sequelize.define(
   'App',
-  { version: DataTypes.STRING },
+  { version: DataTypes.INTEGER },
   { freezeTableName: true }
 );
