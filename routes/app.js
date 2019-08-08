@@ -7,7 +7,6 @@ const routes = require('express').Router();
 const fsPromises = require('fs').promises;
 const ApkReader = require('adbkit-apkreader');
 const models = require('../models');
-const compareVersion = require('../utils/compareVersion');
 
 const pathApp = 'app';
 const pathUploads = path.join(__dirname, '..', process.env.APP_PATH_UPLOADS, pathApp);
@@ -43,8 +42,7 @@ routes.post('/upload', upload.single('file'), async (req, res, next) => {
     await fsPromises.rename(fullPathAppTmp, fullPathApp);
     const reader = await ApkReader.open(fullPathApp);
     const manifest = await reader.readManifest();
-    const { versionName } = manifest;
-    await models.App.update({ version: versionName }, { where: { id: 1 } });
+    await models.App.update({ version: manifest.versionCode }, { where: { id: 1 } });
   } catch (err) {
     return next(new Error(err));
   }
@@ -52,9 +50,9 @@ routes.post('/upload', upload.single('file'), async (req, res, next) => {
 });
 
 routes.get('/check/:version', async (req, res, next) => {
-  const { version } = req.params;
   const app = await models.App.findOne({ where: { id: 1 }, attributes: ['version'] });
-  const status = compareVersion(app.version, version) > 0;
+  // Убрать костыль после того как будет обновление '030010' (req.params.version <= 3)
+  const status = req.params.version <= 3 || req.params.version < app.version;
   res.send({ status });
 });
 
