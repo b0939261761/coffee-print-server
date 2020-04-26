@@ -1,4 +1,6 @@
-const tableName = 'Devices';
+'use strict';
+
+const tableName = 'GalleryPictures';
 
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable(tableName, {
@@ -8,15 +10,24 @@ module.exports = {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    code: {
+    galleryCategoryId: {
       allowNull: false,
-      type: Sequelize.STRING(10),
-      defaultValue: ''
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'GalleryCategories',
+        key: 'id'
+      },
+      onDelete: 'CASCADE'
     },
-    name: {
+    num: {
       allowNull: false,
-      type: Sequelize.STRING(254),
-      defaultValue: ''
+      type: Sequelize.INTEGER,
+      defaultValue: 0
+    },
+    visible: {
+      allowNull: false,
+      type: Sequelize.BOOLEAN,
+      defaultValue: true
     },
     createdAt: {
       allowNull: false,
@@ -29,9 +40,9 @@ module.exports = {
       defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
     }
   }).then(() => queryInterface.sequelize.query(`
-      CREATE TRIGGER ${tableName}_update_at
-      BEFORE UPDATE ON "${tableName}"
-        FOR EACH ROW EXECUTE PROCEDURE update_at_timestamp()
+    CREATE TRIGGER ${tableName}_update_at
+    BEFORE UPDATE ON "${tableName}"
+      FOR EACH ROW EXECUTE PROCEDURE update_at_timestamp()
   `)),
   down: queryInterface => queryInterface.dropTable(tableName)
 };
